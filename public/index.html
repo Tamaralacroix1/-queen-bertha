@@ -1,0 +1,119 @@
+<!doctype html><html lang="ht"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ff8a65"><title>Asistan Bertha</title>
+<style>
+@font-face{font-family:Nunito;src:url(fonts/Nunito.ttf) format("truetype");font-weight:200 1000}
+:root{--coral:#ff7a59;--peach:#ffb38a;--teal:#0f5f63;--teal2:#14857f;--ink:#2d2a32;--card:#ffffffd9;--r:28px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;font-family:Nunito,system-ui,sans-serif;color:var(--ink);font-size:21px;
+ background:radial-gradient(120% 60% at 50% 0%,#fff1e6 0%,#ffd9c2 45%,#ffc2a8 100%) fixed}
+.wrap{max-width:520px;margin:0 auto;padding:22px 18px 40px}
+header{display:flex;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:25px;white-space:nowrap;font-weight:900;letter-spacing:-.5px}
+.sub{margin:2px 0 0;color:#7a5a52;font-weight:700;font-size:18px}
+.avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--teal2),var(--teal));display:grid;place-items:center;font-size:30px;box-shadow:0 8px 20px #0f5f6340}
+#demo{display:none;margin-top:12px;background:#fff3c4;color:#7a5b00;border-radius:999px;padding:6px 14px;font-weight:800;font-size:15px;width:fit-content}
+.micZone{display:grid;place-items:center;margin:30px 0 8px;position:relative}
+#mic{position:relative;width:190px;height:190px;border-radius:50%;border:none;cursor:pointer;color:#fff;font:900 26px Nunito;
+ background:radial-gradient(circle at 35% 30%,#ffa184,var(--coral) 55%,#f0533a);box-shadow:0 0 0 14px #ff7a5926,0 0 0 30px #ff7a5914,0 18px 40px #f0533a66;
+ transition:transform .25s,background .3s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+#mic:active{transform:scale(.95)}#mic .ic{font-size:64px;line-height:1}
+#mic.rec{background:radial-gradient(circle at 35% 30%,#3fbcb3,var(--teal2) 55%,var(--teal));box-shadow:0 18px 40px #0f5f6366}
+#mic.rec::before,#mic.rec::after{content:"";position:absolute;inset:0;border-radius:50%;border:4px solid var(--teal2);animation:ring 1.6s ease-out infinite}
+#mic.rec::after{animation-delay:.8s}@keyframes ring{from{transform:scale(1);opacity:.8}to{transform:scale(1.6);opacity:0}}
+#status{text-align:center;font-weight:800;color:#6b4b44;min-height:28px;margin:18px 0 6px;transition:opacity .3s}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.tile{border:none;border-radius:var(--r);padding:22px 10px;font:900 22px Nunito;color:var(--ink);background:var(--card);
+ box-shadow:0 10px 26px #c0603a26;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .2s,box-shadow .2s;cursor:pointer}
+.tile .ic{font-size:46px}.tile:active{transform:scale(.96)}
+.tile.on{background:linear-gradient(135deg,var(--teal2),var(--teal));color:#fff;box-shadow:0 12px 28px #0f5f6355}
+.panel{background:var(--card);border-radius:var(--r);padding:18px;margin-top:14px;box-shadow:0 10px 26px #c0603a1f;animation:up .35s ease}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.panel b{display:block;margin-bottom:10px;font-size:20px}
+.row{display:flex;gap:10px;margin:8px 0}.row button{flex:1;font:800 19px Nunito;padding:14px 4px;border-radius:18px;border:2px solid #f3d2c3;background:#fff;color:var(--ink);transition:.2s}
+.row button.on,.row button:active{background:var(--teal);border-color:var(--teal);color:#fff}
+input{width:100%;font:700 20px Nunito;padding:16px 18px;border-radius:18px;border:2px solid #f3d2c3;background:#fff;outline:none;transition:border .2s}
+input:focus{border-color:var(--teal2)}
+.hint{color:#8a6a62;font-size:16px;font-weight:700;margin-top:8px}
+.card{background:var(--card);border-radius:var(--r);padding:20px;margin-top:16px;box-shadow:0 12px 30px #c0603a26;animation:up .4s ease}
+.you{font-size:15px;color:#8a6a62;font-weight:700;background:#fff4ee;border-radius:16px;padding:10px 14px}
+#reply{font-size:25px;line-height:1.45;font-weight:700;margin:14px 0 4px}
+.big{width:100%;font:900 24px Nunito;padding:18px;border:none;border-radius:22px;margin-top:12px;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s;cursor:pointer}
+.big:active{transform:scale(.97)}
+#again{background:#fff;color:var(--teal);border:3px solid var(--teal)}
+#copy{background:linear-gradient(135deg,var(--teal2),var(--teal))}
+#share{background:linear-gradient(135deg,#34d27a,#1fa855)}#save{background:linear-gradient(135deg,var(--teal2),var(--teal))}
+#en{font-size:23px;font-weight:700;border-radius:18px;padding:16px;background:#eef8f7;border:2px dashed var(--teal2);white-space:pre-wrap}
+.lbl{font-weight:900;color:var(--teal);font-size:17px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+#img{width:100%;border-radius:20px;display:block;box-shadow:0 8px 20px #0002}
+form{display:flex;gap:10px;margin-top:22px}form input{flex:1;min-width:0}
+form button{border:none;border-radius:18px;width:64px;font-size:26px;color:#fff;background:linear-gradient(135deg,var(--coral),#f0533a);box-shadow:0 8px 18px #f0533a40}
+[hidden]{display:none!important}
+</style></head><body><div class="wrap">
+<header><div><h1>Bonjou Queen Bertha 👑</h1><p class="sub">Kijan m ka ede w jodi a?</p></div><div class="avatar">👑</div></header>
+<div id="demo">✨ Mòd demo</div>
+<div class="micZone"><button id="mic"><span class="ic">🎙️</span><span id="micLbl">Pale</span></button></div>
+<div id="status">Peze pou pale</div>
+<div class="actions">
+ <button class="tile" id="fotoBtn"><span class="ic">🎨</span>Fè yon Foto</button>
+ <button class="tile" id="verseBtn"><span class="ic">📖</span>Vèsè Biblik</button>
+</div>
+<div class="panel" id="fotoPanel" hidden><b>✍️ Mo pa w sou foto a? <small style="font-weight:700;color:#8a6a62">(si ou vle)</small></b>
+ <input id="cap" placeholder="Bòn fèt Mari! 🎉"><div class="hint">Apre sa, peze 🎙️ oswa ekri anba a.</div></div>
+<div class="panel" id="versePanel" hidden><b>Ki vèsè?</b>
+ <div class="row"><button data-t="lespwa">🌅<br>Lespwa</button><button data-t="lanmou">❤️<br>Lanmou</button><button data-t="lapè">🕊️<br>Lapè</button></div>
+ <div class="row"><button data-l="" class="on">Kreyòl</button><button data-l="an fransè">Fransè</button><button data-l="an anglè">Anglè</button></div></div>
+<div class="card" id="replyCard" hidden><div class="you" id="you"></div><p id="reply"></p>
+ <button class="big" id="again">🔊 Tande ankò</button></div>
+<div class="card" id="imgCard" hidden><img id="img" alt="">
+ <button class="big" id="share">📤 Pataje sou WhatsApp</button><button class="big" id="save">💾 Sove</button></div>
+<div class="card" id="enCard" hidden><div class="lbl">Tèks an Anglè</div><div id="en"></div>
+ <button class="big" id="copy">📋 Kopye</button></div>
+<form id="f"><input id="t" placeholder="Oswa ekri isit la..."><button aria-label="Voye">➤</button></form>
+</div>
+<script>
+const $=id=>document.getElementById(id);let fotoMode=false,verseMode=false,verseLang='',lastImg=null,rec,chunks=[],lastAudio=null,lastText='';
+fetch('/health').then(r=>r.json()).then(h=>{if(h.mock)$('demo').style.display='block'});
+const status=t=>$('status').textContent=t;
+function say(text,b64){lastAudio=b64;lastText=text;if(b64){new Audio('data:audio/mp3;base64,'+b64).play().catch(()=>{})}
+ else if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(text);u.lang='fr-HT';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}}
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function url(){return fotoMode?'/message?mode=image&caption='+encodeURIComponent($('cap').value.trim()):verseMode?'/message?mode=verse':'/message'}
+async function send(opts){const u=url();status('⏳ Tann yon ti moman...');
+ try{const r=await fetch(u,opts);const d=await r.json();if(d.error)throw new Error(d.error);show(d)}
+ catch(e){status('😕 Gen yon pwoblèm. Eseye ankò.');console.error(e)}}
+function sendText(t){send({method:'POST',headers:{'Content-Type':'application/json'},
+ body:JSON.stringify({text:t,mode:fotoMode?'image':verseMode?'verse':undefined,caption:fotoMode?$('cap').value.trim()||undefined:undefined})})}
+function show(d){status('✅ Men repons ou');$('replyCard').hidden=false;
+ $('you').innerHTML='🗣️ '+esc(d.transcript_creole)+(d.english_translation?'<br>🇺🇸 '+esc(d.english_translation):'');
+ $('reply').textContent=d.reply_creole;$('enCard').hidden=!d.english_text;$('en').textContent=d.english_text||'';
+ lastImg=d.image;$('imgCard').hidden=!d.image;if(d.image)$('img').src='data:image/png;base64,'+d.image.png_base64;
+ say(d.reply_creole,d.reply_audio_mp3_base64);setTimeout(()=>(d.image?$('imgCard'):$('replyCard')).scrollIntoView({behavior:'smooth'}),100)}
+function setFoto(on){fotoMode=on;$('fotoPanel').hidden=!on;$('fotoBtn').classList.toggle('on',on);
+ if(on){setVerse(false);status('🎨 Ki foto ou vle? Pale oswa ekri.');say('Ki foto ou vle? Peze gwo bouton an epi di m, oswa ekri l anba a. Si ou vle mo sou foto a, ekri yo nan ti bwat la.')}else status('Peze pou pale')}
+function setVerse(on){verseMode=on;$('versePanel').hidden=!on;$('verseBtn').classList.toggle('on',on);
+ if(on){setFoto(false);status('📖 Chwazi yon vèsè');say('Ki kalite vèsè ou vle? Chwazi youn, oswa peze gwo bouton an epi pale.')}}
+$('fotoBtn').onclick=()=>setFoto(!fotoMode);$('verseBtn').onclick=()=>setVerse(!verseMode);
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>sendText('Fè yon vèsè biblik sou '+b.dataset.t+' '+verseLang));
+document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{verseLang=b.dataset.l;document.querySelectorAll('[data-l]').forEach(x=>x.classList.toggle('on',x===b))});
+$('mic').onclick=async()=>{
+ if(rec&&rec.state==='recording'){rec.stop();return}
+ try{const s=await navigator.mediaDevices.getUserMedia({audio:true});rec=new MediaRecorder(s);chunks=[];
+  rec.ondataavailable=e=>chunks.push(e.data);
+  rec.onstop=()=>{s.getTracks().forEach(t=>t.stop());$('mic').classList.remove('rec');$('micLbl').textContent='Pale';
+   const b=new Blob(chunks,{type:rec.mimeType||'audio/webm'});send({method:'POST',headers:{'Content-Type':b.type.split(';')[0]},body:b})};
+  rec.start();$('mic').classList.add('rec');$('micLbl').textContent='Kanpe';status('👂 M ap koute... Peze ankò lè ou fini.')}
+ catch(e){status('🎙️ Mikwofòn pa mache. Ekri anba a.')}};
+$('f').onsubmit=e=>{e.preventDefault();const t=$('t').value.trim();if(!t)return;$('t').value='';sendText(t)};
+$('again').onclick=()=>say(lastText,lastAudio);
+function imgBlob(){const b=atob(lastImg.png_base64),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Blob([a],{type:'image/png'})}
+$('save').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(imgBlob());a.download=(lastImg.kind==='verse'?'vese':'foto')+'.png';a.click();
+ say('Foto a sove nan telefòn ou. Ou ap jwenn li nan Galri oswa Telechajman.')};
+$('share').onclick=async()=>{const f=new File([imgBlob()],'foto.png',{type:'image/png'});const cap=lastImg.caption||'';
+ if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],text:cap});return}catch(e){if(e.name==='AbortError')return}}
+ $('save').onclick();window.open('https://wa.me/?text='+encodeURIComponent(cap||'🙏'),'_blank');
+ say('Mwen sove foto a. Nan WhatsApp, chwazi zanmi ou, peze klip la, epi chwazi foto a nan Galri.')};
+$('copy').onclick=async()=>{const t=$('en').textContent;try{await navigator.clipboard.writeText(t)}catch{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}
+ $('copy').textContent='✅ Kopye!';setTimeout(()=>$('copy').textContent='📋 Kopye',2000);
+ say('Mwen kopye tèks la. Kounye a, ale kote ou vle mete l. Peze dwèt ou sou bwat ekri a epi kenbe l. Lè sa a, chwazi Paste.')};
+</script></body></html>
