@@ -49,8 +49,8 @@ async function speak(text) {
   const r = await fetch(OPENAI + '/audio/speech', {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + process.env.OPENAI_API_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: process.env.OPENAI_TTS_MODEL || 'gpt-4o-mini-tts', voice: 'nova', input: text,
-      instructions: 'Speak slowly and warmly in Haitian Creole.', response_format: 'mp3' }),
+    body: JSON.stringify({ model: process.env.OPENAI_TTS_MODEL || 'gpt-4o-mini-tts', voice: process.env.OPENAI_TTS_VOICE || 'coral', input: text,
+      instructions: 'You are a warm Haitian grandmother-friendly assistant. Speak in Haitian Creole (Kreyòl ayisyen) with a natural, authentic Haitian accent, as a native speaker from Port-au-Prince would. Do not use a French or American accent. Speak slowly, clearly, warmly and kindly, with gentle pauses.', response_format: 'mp3' }),
   });
   if (!r.ok) { console.warn('TTS HTTP ' + r.status); return null; }
   return Buffer.from(await r.arrayBuffer()).toString('base64');

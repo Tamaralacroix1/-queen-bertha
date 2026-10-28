@@ -18,5 +18,9 @@ app.post('/message', express.raw({ type: 'audio/*', limit: '25mb' }), async (req
     res.json(r);
   } catch (e) { console.error(e.message); res.status(500).json({ error: e.message }); }
 });
+app.post('/tts', async (req, res) => {
+  try { const P = require('../../brain/providers'); const a = isMock() ? null : await P.speak(String(req.body.text || '').slice(0, 4000)); res.json({ audio: a }); }
+  catch (e) { res.json({ audio: null }); }
+});
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Bertha assistant on http://localhost:${port} (mock=${isMock()})`));
